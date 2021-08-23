@@ -31,12 +31,6 @@ final class RegistrationController extends AbstractController
         private TranslatorInterface $translator,
     ){}
 
-    /**
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
-     * @return Response
-     * @throws TransportExceptionInterface
-     */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {

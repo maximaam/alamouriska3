@@ -12,16 +12,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * Class SecurityController
- * @package App\Controller
- */
 class SecurityController extends AbstractController
 {
-    /**
-     * @param AuthenticationUtils $authenticationUtils
-     * @return Response
-     */
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -53,7 +45,6 @@ class SecurityController extends AbstractController
     public function profileEdit(Request $request, TranslatorInterface $translator): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
         $form = $this->createForm(EditUserFormType::class, $this->getUser());
         $form->handleRequest($request);
 
