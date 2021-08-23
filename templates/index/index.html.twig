@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'welcome'|trans }}
+    {{ parent() }}
+{% endblock %}
+
+{% block opengraph_title %}
+    <meta property="og:title" content="{{ 'welcome_title' | trans }} - {{ app_name }}" />
+{% endblock %}
+
+{% block body %}
+    {% for flash in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash }}</div>
+    {% endfor %}
+
+    <div class="container start-page">
+        <div class="row text-dark">
+            <div class="col-sm-8">
+                <div class="card mb-3">
+                    <div class="card-header">title222</div>
+                    <div class="card-body">
+                        vody
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-primary" href="{{ path('post_create') }}">{{ 'post_create'|trans }}</a>
+                <div class="card mb-3">
+                    <div class="card-header">title</div>
+                    <div class="card-body">
+                        vody
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">title</div>
+                    <div class="card-body">
+                        vody
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

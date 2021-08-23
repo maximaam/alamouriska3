@@ -1,0 +1,16 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        user_avatar:
+            uri_prefix: /images/avatars
+            upload_destination: '%kernel.project_dir%/public/images/avatars'
+            namer:
+                service: Vich\UploaderBundle\Naming\PropertyNamer
+                options: { property: 'username' }
+
+        posts_image:
+            uri_prefix: /images/posts
+            upload_destination: '%kernel.project_dir%/public/images/posts'
+            namer:
+                service: Vich\UploaderBundle\Naming\UniqidNamer

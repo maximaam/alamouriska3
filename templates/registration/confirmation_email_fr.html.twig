@@ -1,0 +1,9 @@
+<h1>Bonjour {{ username }} !</h1>
+<p>Merci pour ton inscription sur {{ app_name }}.</p>
+<p>
+    Pour confirmer ton inscription, clique sur lien suivant:
+    <a href="{{ signedUrl|raw }}">Confirmer mon inscription</a>.
+    <br><br>
+    Ce lien expirera dans {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+</p>
+<p>A très bientôt !</p>

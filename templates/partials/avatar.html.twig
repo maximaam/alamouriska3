@@ -1,0 +1,23 @@
+{% set avatar = asset('images/default-avatar.png') %}
+
+{% if current_user is defined %}
+
+    {% if current_user.avatarName is not null %}
+        {% set avatar = vich_uploader_asset(current_user, 'avatarFile') %}
+    {% endif %}
+
+    <a href="{{ path(pathTo | default('user_show'), { 'username': current_user.username }) }}" title="Profil: {{ current_user.username }}" class="mr-2 {{ link_classes | default('user img') }}">
+        <img class="rounded-circle {{ classes|default(null) }}" src="{{ avatar }}" alt="{{ current_user.username }}" width="{{ size|default(64) }}" height="{{ size|default(64) }}">
+    </a>
+
+{% else %} {# Avatar without user instance #}
+
+    {% if has_avatar is defined and has_avatar is same as(true) %}
+        {% set avatar = asset('images/profiles/' ~ username ~ '.jpg') %}
+    {% endif %}
+
+    <a href="{{ path(pathTo | default('user_show'), { 'username': username }) }}" title="Profil: {{ username }}" class="mr-2 {{ link_classes | default('user img') }}">
+        <img class="rounded-circle {{ classes|default(null) }}" src="{{ avatar }}" alt="{{ username }}" width="{{ size|default(64) }}" height="{{ size|default(64) }}">
+    </a>
+
+{% endif %}

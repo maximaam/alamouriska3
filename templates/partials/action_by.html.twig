@@ -1,0 +1,14 @@
+{# Some case we dnt have a user object #}
+{% set username = user is defined ? user.username : username %}
+
+<strong>
+    <a href="{{ path('user_show', { 'username': username }) }}" title="Ajouté(e) par: {{ username }}">
+        {% if is_mobile(app.request.headers) is same as(true) %}
+            {{ username | wordwrap(18) }}
+        {% else %}
+            {{ username }}
+        {% endif %}
+    </a>
+</strong>
+<br>
+<span class="text-secondary" title="Publié(e) le">{{ action_date | date }}</span>

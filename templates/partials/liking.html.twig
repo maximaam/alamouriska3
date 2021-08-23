@@ -1,0 +1,19 @@
+{% if app.user %}
+    {% set liking_user = app.user.id in liking_users ? true : false %}
+    <a href="#" class="js_almrsk-liking" data-owner="{{ owner }}-{{ owner_id }}" data-opposite-action="">
+        <span class="likings-container {{ liking_user ? 'text-danger' }}">
+            <i class="fa fa-thumbs-up"></i>
+            <span class="likings-label" title="{{ liking_user ? 'label.liking_remove'|trans : 'label.liking_add'|trans }}">
+                {{ 'label.liking_add' | trans }}
+            </span>
+            (<span class="likings-sum">{{ liking_users | length }}</span>)
+        </span>
+    </a>
+
+{% else %}
+    <a href="{{ path('fos_user_security_login') }}" title="{{ 'label.log_in' | trans }}">
+        <i class="fa fa-thumbs-up"></i>
+        {{ 'label.liking_add' | trans }}
+        (<span class="likings-sum">{{ liking_users | length }}</span>)
+    </a>
+{% endif %}

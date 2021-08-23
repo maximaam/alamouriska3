@@ -1,19 +1,114 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="utf-8">
+    <title>
+        {% block title %} - {{ app_name }} {% endblock %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index,follow">
+    <meta name="author" content="{{ app_name }}">
+    <meta name="keywords" content="derdja algérienne, daridja, dardja, mots algériens, proverbes algériens, expressions algériennes, alamouriska, zkara, nafha, blagues algériennes">
+    <meta name="description" content="{{ app_name }} est une application dédiée au rassemblement et stockage des mots algériens, du repertoire historique de la derdja.">
+
+    <meta property="fb:app_id" content="440835073385326">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:url" content="{{ app.request.uri }}">
+    <meta property="og:type" content="{{ (app.request.get('_route') == 'index_index') ? 'website' : 'article' }}">
+
+    {% block opengraph_image %}
+        <meta property="og:image" content="https://www.alamouriska.com/images/deep-sea2.jpg">
+    {% endblock %}
+
+    {% block opengraph_title %}
+        <meta property="og:title" content="- {{ app_name }}">
+    {% endblock %}
+
+    {% block opengraph_description %}
+        <meta property="og:description" content="{{ app_name }} est une application dédiée au rassemblement et stockage des mots algériens, du repertoire historique de la derdja.">
+    {% endblock %}
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}" media="print" onload="this.media='all'">
+    <link rel="shortcut icon" sizes="32x32" href="{{ asset('images/logo.png') }}" type="image/png">
+</head>
+
+<body data-fb-logged="{{ app.user ? 'true' : 'false' }}">
+<!--
+    <script src="{{ asset('js/fb.js') }}"></script>
+    -->
+
+    <header class="main-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" href="{{ path('app_index') }}">
+                    <img src="{{ asset('images/logo.png') }}" alt="{{ app_name }} Logo" title="{{ app_name }} - {{ 'slogan' | trans }}" width="48" height="48" class="logo rounded-circle">
+                    <span>{{ app_name|upper }}</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    {{ knp_menu_render('main') }}
+                    <!--
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    -->
+
+                    <div class="user-cont mr-2">
+                        {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+                            <a href="{{ path('app_logout') }}" class="user btn" title="Paramètres">
+                                {{ 'label.logout'|trans }}
+                            </a>
+                            <a href="{{ path('app_profile_show') }}" class="user btn" title="Paramètres">
+                                {{ 'label.profile'|trans }}
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" title="Se connecter ou S'inscrire" class="user btn rounded">
+                                {{ 'label.login'|trans }}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="row">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer py-3 py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    sdfsdfsdfs
+                    {# {{ knp_menu_render('footer') }} #}
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <a href="https://www.facebook.com/alamouriska/" target="_blank" rel="noreferrer" class="display-4 text-white">
+                        <i class="fa fa-facebook-official" title="{{ app_name }} Facebook page"></i>
+                    </a>
+                    <a href="https://www.twitter.com/alamouriska" target="_blank" rel="noreferrer" class="display-4 text-white">
+                        <i class="fa fa-twitter" title="{{ app_name }} Twitter page"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
+    {% block javascripts %}{% endblock %}
+</body>
 </html>

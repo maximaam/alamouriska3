@@ -1,0 +1,26 @@
+<div class="card fixed-card {{ classes|default('') }}">
+    <div class="card-header font-weight-bold">{{ header }}</div>
+    <div class="card-body">
+        {% if posts is defined and posts | length > 0 %}
+            <ul class="pl-3 mb-0">
+                {% for post in posts %}
+                    <li title="{{ post.post }}">
+                        <a href="{{ path('post_show', { 'domain': domain, 'id': post.id, 'slug': post.slug }) }}">
+                            {{ post.post | truncate(25) }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="alert-warning p-2">
+                Aucun résultat trouvé
+            </p>
+
+            {%  if search is defined %}
+                <p class="text-right">
+                    <a href="{{ path('post_index', { 'domain': domain }) }}">Afficher tout</a>
+                </p>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>

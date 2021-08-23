@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'label.reset_password'|trans }}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="alert alert-success" role="alert">
+        <h3>{{ 'label.reset_password'|trans }}</h3>
+        <p>
+            Un email a été envoyé qui contient un lien pour modifier ton mot de passe.
+            Le lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+        </p>
+        <p>Si tu ne recois pas d'email, vérifie les spam ou <a href="{{ path('app_forgot_password_request') }}">essaie encore</a>.</p>
+    </div>
+{% endblock %}

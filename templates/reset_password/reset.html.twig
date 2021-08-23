@@ -1,0 +1,17 @@
+{% extends 'layer_center.html.twig' %}
+
+{% block title %}
+    {{ 'label.change_password'|trans }}
+    {{ parent() }}
+{% endblock %}
+
+{% block card_header %}
+    <h1 class="text-center">{{ 'label.change_password'|trans }}</h1>
+{% endblock %}
+
+{% block card_body %}
+    {{ form(form) }}
+{% endblock %}
+
+{% block card_footer %}
+{% endblock %}

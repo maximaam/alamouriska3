@@ -1,0 +1,24 @@
+{% extends 'layer_center.html.twig' %}
+
+{% block title %}
+    {{ 'label.register'|trans }}
+    {{ parent() }}
+{% endblock %}
+
+{% block card_header %}
+    <h1 class="text-center">{{ 'label.register'|trans }}</h1>
+{% endblock %}
+
+{% block card_body %}
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">
+            {{ flashError }}
+        </div>
+    {% endfor %}
+
+    {{ form(form) }}
+{% endblock %}
+
+{% block card_footer %}
+    {{ include('partials/fb-login.html.twig', { 'label': 'label.login_facebook' | trans }) }}
+{% endblock %}

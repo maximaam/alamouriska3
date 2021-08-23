@@ -1,0 +1,13 @@
+<form class="form-inline mt-2 d-inline" method="get" action="{{ path('post_search') }}">
+    <div class="input-group mb-2">
+        <label for="terme"></label>
+        <input type="hidden" id="domaine" name="domaine" required value="{{ domain }}">
+        <input class="form-control px-3" type="search" id="terme" name="terme" placeholder="Recherche..." aria-label="Recherche" required pattern=".{3,}" title="3 chars minimum" autocomplete="false" value="{{ app.request.get('terme') }}">
+
+        <span class="input-group-append">
+            <button class="btn btn-outline-secondary border-0 border bg-happy" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+</form>

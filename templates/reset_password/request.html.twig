@@ -1,0 +1,21 @@
+{% extends 'layer_center.html.twig' %}
+
+{% block title %}
+    {{ 'label.reset_password'|trans }}
+    {{ parent() }}
+{% endblock %}
+
+{% block card_header %}
+    <h1 class="text-center">{{ 'label.reset_password'|trans }}</h1>
+{% endblock %}
+
+{% block card_body %}
+    {% for flashError in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    {{ form(form) }}
+{% endblock %}
+
+{% block card_footer %}
+{% endblock %}
