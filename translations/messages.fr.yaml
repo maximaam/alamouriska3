@@ -1,4 +1,5 @@
 welcome: Bienvenue, Merhba Bikoum!
+slogan: L'appel de la langue algérienne !
 
 label:
   send: Envoyer
@@ -23,6 +24,7 @@ label:
   logout: Déconnexion
   login_facebook: Connexion avec Facebook
   no_account: Pas encore de compte? Incris-toi!
+  search: Recherche
 
 flash:
   registration_pre_confirmation: "Sahit ! Un email de confirmation a été envoyé. Ne pas oublier de confirmer en cliquant sur le lien inclus."
@@ -60,8 +62,8 @@ post:
     create: Créer une publication
   form:
     label:
-      type: Selectionner type de la publication...
-      title: La publication...
-      description: Expliquer la publication...
-      question: Publication en forme de question
-      image: Ajouter une image (optionnel)
+      type: --- Type de publication --- *
+      title: La publication *
+      description: Explication *
+      question: Je pose une question
+      image: Image (optionnel)

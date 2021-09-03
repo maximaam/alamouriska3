@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Form;
@@ -11,17 +12,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use function array_walk, sprintf, array_flip, str_replace;
 
-/**
- * Class PostType
- * @package App\Form
- */
 final class PostType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $types = Post::getTypes(false);
         array_walk($types, static function (string &$val) {
@@ -33,25 +26,24 @@ final class PostType extends AbstractType
                 'placeholder' => 'post.form.label.type',
                 'label' => false,
                 'choices' => array_flip($types),
-                'choice_attr' => function ($choice, $key, $value) {
+                'choice_attr' => static function ($choice, $key, $value) {
                     return ['data-label' => str_replace('singular', 'title_hint', $key)];
                 },
+                'attr' => [
+                    'data-action' => 'change->post-create#typeChange',
+                ],
             ])
             ->add('title', null, [
-                'label_attr' => [
-                    'class' => 'd-none',
-                ],
+                'label' => 'post.form.label.title',
                 'attr' => [
-                    'placeholder' => 'post.form.label.title',
+                    'rows' => 3,
+                    'class' => 'post-title',
                 ]
             ])
             ->add('description', null, [
-                'label_attr' => [
-                    'class' => 'd-none',
-                ],
+                'label' => 'post.form.label.description',
                 'attr' => [
-                    'placeholder' => 'post.form.label.description',
-                    'rows' => 5,
+                    'rows' => 3,
                 ]
             ])
             ->add('isQuestion', null, [
@@ -60,10 +52,11 @@ final class PostType extends AbstractType
             ->add('image', ImageType::class, [
                 'label' => 'post.form.label.image',
                 'required' => false,
-                'help' => '<img src="#" alt="" class="img-preview">',
+                'help' => '<img src="#" alt="" class="image-preview">',
                 'help_html' => true,
                 'attr' => [
-                    'accept' => 'image/jpeg, image/png',
+                    'accept' => 'image/jpg, image/jpeg, image/png',
+                    'data-action' => 'change->post-create#imagePreview',
                 ],
             ])
             ->add('submit', SubmitType::class, [
@@ -71,14 +64,10 @@ final class PostType extends AbstractType
                 'row_attr' => [
                     'class' => 'text-end',
                 ],
-            ])
-        ;
+            ]);
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Post::class,

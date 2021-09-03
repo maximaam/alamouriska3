@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
 
 use App\Entity\Traits\PostTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PostRepository;
@@ -12,19 +14,18 @@ use App\Repository\PostRepository;
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  * @UniqueEntity(fields={"title"}, message="post_exists")
- * @ORM\HasLifecycleCallbacks
+ * @ORM\HasLifecycleCallbacks()
  */
 class Post
 {
-    use PostTrait;
+    use PostTrait, TimestampableEntity;
 
-    const PAGINATOR_MAX = 20;
-    const SLUG_LIMIT = 128;
-
-    const TYPE_WORD = 1;
-    const TYPE_EXPRESSION = 2;
-    const TYPE_PROVERB = 3;
-    const TYPE_JOKE = 4;
+    public const PAGINATOR_MAX = 20;
+    public const SLUG_LIMIT = 128;
+    public const TYPE_WORD = 1;
+    public const TYPE_EXPRESSION = 2;
+    public const TYPE_PROVERB = 3;
+    public const TYPE_JOKE = 4;
 
     /**
      * @ORM\Id
@@ -41,13 +42,13 @@ class Post
     private ?int $type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
      * @Assert\NotBlank
      */
     private ?string $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      * @Assert\NotBlank
      */
     private ?string $description;
@@ -62,26 +63,16 @@ class Post
      */
     private ?Image $image;
 
-    /**
-     * @return int|null
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return int|null
-     */
     public function getType(): ?int
     {
         return $this->type;
     }
 
-    /**
-     * @param int $type
-     * @return $this
-     */
     public function setType(int $type): self
     {
         $this->type = $type;
@@ -89,18 +80,11 @@ class Post
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     * @return $this
-     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -108,18 +92,11 @@ class Post
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     * @return $this
-     */
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -127,18 +104,11 @@ class Post
         return $this;
     }
 
-    /**
-     * @return bool|null
-     */
     public function isQuestion(): ?bool
     {
         return $this->isQuestion;
     }
 
-    /**
-     * @param bool $isQuestion
-     * @return $this
-     */
     public function setIsQuestion(bool $isQuestion): self
     {
         $this->isQuestion = $isQuestion;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Service;
@@ -24,10 +25,6 @@ final class NavBuilder
         private TranslatorInterface $translator,
     ){}
 
-    /**
-     * @param array $options
-     * @return ItemInterface
-     */
     public function mainMenu(array $options): ItemInterface
     {
         $menu = $this->factory->createItem('root');
@@ -71,18 +68,13 @@ final class NavBuilder
         return $menu;
     }
 
-
-    /**
-     * @param array $options
-     * @return ItemInterface
-     */
     public function footerMenu(array $options): ItemInterface
     {
         $menu = $this->factory->createItem('root');
         $menu->setChildrenAttribute('class', 'footer-nav list-unstyled text-right');
-        $pages = $this->em->getRepository(Page::class)->findBy(['embedded' => false]);
+        $pages = $this->entityManager->getRepository(Post::class)->findBy(['embedded' => false]);
 
-        /** @var Page $page */
+
         foreach ($pages as $page) {
             $menu->addChild($page->getTitle(), [
                 'route' => 'index_page',

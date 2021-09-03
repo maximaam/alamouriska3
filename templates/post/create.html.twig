@@ -10,7 +10,10 @@
 {% endblock %}
 
 {% block card_body %}
-    {{ form(form) }}
+    {{ form(form, {'attr': {
+        'data-controller': 'post-create',
+        'data-action': 'post-create#validate'
+    }}) }}
 {% endblock %}
 
 {% block card_footer %}
