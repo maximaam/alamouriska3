@@ -33,6 +33,12 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
+        #Liip imagine
+        #https://symfony.com/bundles/LiipImagineBundle/current/basic-usage.html#optimize-firewall-configuration
+        image_resolver:
+            pattern: ^/media/cache/resolve
+            security: false
+
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:

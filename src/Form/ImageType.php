@@ -6,6 +6,7 @@ namespace App\Form;
 
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -15,11 +16,10 @@ final class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('imageFile', VichImageType::class, [
+            ->add('imageFile', FileType::class, [
+                'mapped' => false,
                 'label' => false,
                 'required' => false,
-                'download_uri' => true,
-                'image_uri' => true,
                 'attr' => [
                   'class' => 'input-image',
                 ],

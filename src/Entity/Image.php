@@ -5,20 +5,13 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ImageRepository;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
- * @Vich\Uploadable
  */
 class Image
 {
-    use TimestampableEntity;
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -32,9 +25,19 @@ class Image
     private ?string $name = null;
 
     /**
-     * @Vich\UploadableField(mapping="posts_image", fileNameProperty="name")
+     * @ORM\Column(type="smallint", options={"unsigned"=true})
      */
-    private ?File $imageFile = null;
+    private ?int $width;
+
+    /**
+     * @ORM\Column(type="smallint", options={"unsigned"=true})
+     */
+    private ?int $height;
+
+    /**
+     * @ORM\Column(type="string", length=16)
+     */
+    private ?string $mime;
 
     public function getId(): ?int
     {
@@ -46,25 +49,45 @@ class Image
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getImageFile(): ?File
+    public function getWidth(): ?int
     {
-        return $this->imageFile;
+        return $this->width;
     }
 
-    public function setImageFile(?File $imageFile = null): self
+    public function setWidth(int $width): self
     {
-        $this->imageFile = $imageFile;
+        $this->width = $width;
 
-        if (null !== $imageFile) {
-            $this->updatedAt = new DateTime();
-        }
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(int $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getMime(): ?string
+    {
+        return $this->mime;
+    }
+
+    public function setMime(string $mime): self
+    {
+        $this->mime = $mime;
 
         return $this;
     }

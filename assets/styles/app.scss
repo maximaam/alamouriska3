@@ -122,6 +122,21 @@ main {
     max-height: 128px;
 }
 
+.card.post {
+    .card-body {
+        padding: 0;
+        .post-image {
+            height: 450px;
+            line-height: 450px;
+            background: var(--bs-gray);
+            text-align: center;
+            img {
+                max-width: 100%;
+            }
+        }
+    }
+}
+
 @media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
     .navbar-brand span {
         display: none;

@@ -49,7 +49,6 @@ class Post
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Assert\NotBlank
      */
     private ?string $description;
 
@@ -61,7 +60,7 @@ class Post
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
      */
-    private ?Image $image;
+    private ?Image $image = null;
 
     public function getId(): ?int
     {

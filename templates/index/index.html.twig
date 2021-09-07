@@ -18,16 +18,9 @@
         <div class="row text-dark">
             <div class="col-sm-8">
                 {% for post in posts %}
-                <div class="card mb-3">
-                    <div class="card-header">{{ post.title() }}</div>
-                    <div class="card-body">
-                        vody
-                    </div>
-                </div>
+                    {{ include('partials/card_post.html.twig', {post: post}, with_context = false) }}
                 {% endfor %}
             </div>
-
-
 
             <div class="col-sm-4">
                 <a class="btn btn-primary" href="{{ path('post_create') }}">{{ 'post_create'|trans }}</a>

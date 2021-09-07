@@ -1,0 +1,20 @@
+<div class="card post mb-3">
+    <div class="card-header">{{ post.title() }}</div>
+    <div class="card-body">
+        <div class="post-title"></div>
+        {% if post.image %}
+            <div class="post-image">
+                <img src="{{ asset(post.image.name, 'post_image')|imagine_filter('post_image') }}"
+                     alt="{{ post.title }}"
+                     title="{{ post.title }}"
+                     width="{{ post.image.width }}"
+                     height="{{ post.image.height }}">
+            </div>
+        {% endif %}
+        <div class="post-description"></div>
+        <div class="post-actions"></div>
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-primary" href="{{ path('post_delete', {id: post.id}) }}">DELETE</a>
+    </div>
+</div>

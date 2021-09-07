@@ -14,3 +14,5 @@ final class ModelUtils
         ['name' => 'Blogs', 'route' => 'blogs'],
     ];
 }
+
+
