@@ -1,7 +1,6 @@
 @import "~bootstrap/scss/bootstrap";
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
-
 :root {
     --dark-grey: #333333;
     --light-grey: #dddddd;
@@ -122,16 +121,23 @@ main {
     max-height: 128px;
 }
 
-.card.post {
-    .card-body {
-        padding: 0;
-        .post-image {
-            height: 450px;
-            line-height: 450px;
-            background: var(--bs-gray);
-            text-align: center;
-            img {
-                max-width: 100%;
+.card {
+    .card-header {
+        h1 {
+            font-size: 2rem;
+        }
+    }
+    &.post {
+        .card-body {
+            padding: 0;
+            .post-image {
+                height: 450px;
+                line-height: 450px;
+                background: var(--bs-gray);
+                text-align: center;
+                img {
+                    max-width: 100%;
+                }
             }
         }
     }

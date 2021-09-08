@@ -31,7 +31,7 @@ final class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('app_index_index');
         }
 
         $user = new User();
@@ -57,7 +57,7 @@ final class RegistrationController extends AbstractController
 
             $this->addFlash('success', $this->translator->trans('flash.registration_pre_confirmation'));
 
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('app_index_index');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -86,6 +86,6 @@ final class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', $this->translator->trans('flash.registration_confirmation'));
 
-        return $this->redirectToRoute('app_index');
+        return $this->redirectToRoute('app_index_index');
     }
 }

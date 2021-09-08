@@ -8,6 +8,8 @@ framework:
         packages:
             post_image:
                 base_path: '/images/posts'
+            avatar_image:
+                base_path: '/images/avatars'
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.

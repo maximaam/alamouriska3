@@ -10,17 +10,17 @@
 {% endblock %}
 
 {% block card_body %}
-    <a href="{{ path('app_profile_edit') }}">
-        {{ 'label.profile_edit'|trans }}
-    </a>
-    <br>
-    <a href="{{ path('app_forgot_password_request') }}">
-        {{ 'label.change_password'|trans }}
-    </a>
-    <br>
-    <a href="{{ path('app_logout') }}">
-        {{ 'label.logout'|trans }}
-    </a>
+    {% for flash in app.flashes('success') %}
+        <div class="alert alert-success" role="alert">{{ flash }}</div>
+    {% endfor %}
+
+    <div class="mb-2 text-center">
+        {{ include('partials/avatar.html.twig') }}
+    </div>
+
+    {% block profile_content %}
+    {% endblock %}
+
 {% endblock %}
 
 {% block card_footer %}

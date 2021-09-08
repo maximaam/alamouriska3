@@ -16,7 +16,7 @@ use Liip\ImagineBundle\Imagine\Cache\CacheManager as ImagineCacheManager;
 use Liip\ImagineBundle\Controller\ImagineController;
 use function getimagesize;
 
-#[Route(name: 'post_')]
+#[Route(name: 'app_post_')]
 final class PostController extends AbstractController
 {
     public const IMG_DIR = '/images/posts/';
@@ -63,7 +63,7 @@ final class PostController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', $this->translator->trans('flash.post_created_confirmation'));
 
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('app_index_index');
         }
 
         return $this->render('post/create.html.twig', [
@@ -92,7 +92,7 @@ final class PostController extends AbstractController
             echo $e->getMessage();
         }
 
-        return $this->redirectToRoute('app_index');
+        return $this->redirectToRoute('app_index_index');
     }
 
     private function getCacheImagePath(?string $filename): string

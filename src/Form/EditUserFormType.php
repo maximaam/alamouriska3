@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Form;
@@ -10,16 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class EditUserFormType
- * @package App\Form
- */
-class EditUserFormType extends AbstractType
+final class EditUserFormType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -28,10 +21,20 @@ class EditUserFormType extends AbstractType
                 'label' => 'label.email_address',
                 'help' => 'label.email_private',
             ])
-            ->add('username', null, [
+            ->add('displayName', null, [
                 'trim' => true,
-                'label' => 'label.username',
-                'help' => 'label.username_only_alnum',
+                'label' => 'label.display_name',
+                'help' => 'label.display_name_only_alnum',
+            ])
+            ->add('avatar', ImageType::class, [
+                'label' => 'post.form.label.image',
+                'required' => false,
+                'help' => '<img src="#" alt="" class="image-preview">',
+                'help_html' => true,
+                'attr' => [
+                    'accept' => 'image/jpg, image/jpeg, image/png',
+                    'data-action' => 'change->post-create#imagePreview',
+                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'label.send',
@@ -42,9 +45,6 @@ class EditUserFormType extends AbstractType
         ;
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -31,7 +31,7 @@ final class NavBuilder
         $menu->setChildrenAttribute('class', 'navbar-nav me-auto mb-2 mb-lg-0');
         foreach (Post::getTypes(false) as $typeId => $typeName) {
             $menu->addChild(strtoupper($this->translator->trans(sprintf('post.%s.plural', $typeName))), [
-                'route' => 'post_index',
+                'route' => 'app_post_index',
                 'routeParameters' => [
                     'type' => $this->translator->trans(sprintf('post.%s.seo_route', $typeName))
                 ],

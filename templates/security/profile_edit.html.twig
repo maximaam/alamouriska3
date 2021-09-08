@@ -1,19 +1,10 @@
-{% extends 'layer_center.html.twig' %}
-
-{% block title %}
-    {{ 'label.profile'|trans }}
-    {{ parent() }}
-{% endblock %}
+{% extends 'security/layout_profile.html.twig' %}
 
 {% block card_header %}
     <h1 class="text-center">{{ 'label.profile_edit'|trans }}</h1>
 {% endblock %}
 
-{% block card_body %}
-    {% for flash in app.flashes('success') %}
-        <div class="alert alert-success" role="alert">{{ flash }}</div>
-    {% endfor %}
-
+{% block profile_content %}
     {{ form(form) }}
 {% endblock %}
 

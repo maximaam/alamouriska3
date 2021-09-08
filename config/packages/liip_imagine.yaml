@@ -5,8 +5,22 @@ liip_imagine:
     default_filter_set_settings:
         format: webp
     filter_sets:
+        cache : ~
         post_image:
             quality: 75
             filters:
                 relative_resize:
                     heighten: 400
+
+        avatar_image_128:
+            quality: 75
+            filters:
+                thumbnail  : { size : [128, 128], mode : outbound }
+        avatar_image_64:
+            quality: 75
+            filters:
+                thumbnail: { size: [64, 64], mode: outbound }
+        avatar_image_32:
+            quality: 75
+            filters:
+                thumbnail: { size: [32, 32], mode: outbound }

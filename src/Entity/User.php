@@ -1,25 +1,22 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"username"}, message="username_exists")
+ * @UniqueEntity(fields={"displayName"}, message="display_name_exists")
  * @UniqueEntity(fields={"email"}, message="email_exists")
  * @ORM\HasLifecycleCallbacks
- * @Vich\Uploadable
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -47,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Type(type="alnum")
      * @Assert\Length(min=4,max=30)
      */
-    private string $username;
+    private ?string $displayName;
 
     /**
      * @ORM\Column(type="string")
@@ -65,24 +62,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     /**
-     * @ORM\Column(type="string", length=128, nullable=true)
+     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
      */
-    private ?string $avatarName = null;
-
-    /**
-     * @Assert\Image(
-     *     maxSize = "1M",
-     *     mimeTypes = {"image/jpeg", "image/png"},
-     *     minWidth = 128, maxWidth = 800,
-     *     minHeight = 128, maxHeight = 800,
-     *     minWidthMessage="Votre photo doit faire minimum 128px de largeur.",
-     *     minHeightMessage="Votre photo doit faire minimum 128px de hauteur.",
-     *     maxSizeMessage = "The maxmimum allowed file size is 1MB.",
-     *     mimeTypesMessage = "Only the filetypes image are allowed."
-     * )
-     * @Vich\UploadableField(mapping="user_avatar", fileNameProperty="avatarName")
-     */
-    private ?File $avatarFile = null;
+    private ?Image $avatar = null;
 
     /**
      * @ORM\Column(type="boolean")
@@ -121,6 +103,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getDisplayName(): ?string
+    {
+        return $this->displayName;
+    }
+
+    public function setDisplayName(string $displayName): self
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -128,19 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return $this->username;
-    }
-
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
+        return $this->email;
     }
 
     /**
@@ -202,32 +184,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getAvatarName(): ?string
+    public function getAvatar(): ?Image
     {
-        return $this->avatarName;
+        return $this->avatar;
     }
 
-    public function setAvatarName(?string $avatarName): self
+    public function setAvatar(?Image $avatar): self
     {
-        $this->avatarName = $avatarName;
-
-        return $this;
-    }
-
-    public function getAvatarFile(): ?File
-    {
-        return $this->avatarFile;
-    }
-
-    public function setAvatarFile(?File $avatarFile = null): self
-    {
-        $this->avatarFile = $avatarFile;
-
-        if (null !== $avatarFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new DateTimeImmutable();
-        }
+        $this->avatar = $avatar;
 
         return $this;
     }
@@ -283,5 +247,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __call(string $name, array $arguments)
     {
         // TODO: Implement @method string getUserIdentifier()
+    }
+
+    public function getUsername()
+    {
+        // TODO: Implement getUsername() method.
     }
 }

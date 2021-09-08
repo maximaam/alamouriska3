@@ -1,0 +1,22 @@
+{% extends 'security/layout_profile.html.twig' %}
+
+{% block card_header %}
+    <h1 class="text-center">{{ 'label.profile'|trans }}</h1>
+{% endblock %}
+
+
+    {% block profile_content %}
+        <a href="{{ path('app_profile_edit') }}">
+            {{ 'label.profile_edit'|trans }}
+        </a>
+        <br>
+        <a href="{{ path('app_forgot_password_request') }}">
+            {{ 'label.change_password'|trans }}
+        </a>
+        <br>
+        <a href="{{ path('app_logout') }}">{{ 'label.logout'|trans }}</a>
+    {% endblock %}
+
+{% block card_footer %}
+    555
+{% endblock %}
