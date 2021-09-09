@@ -68,8 +68,8 @@
 
                     <div class="user-container">
                         {% if is_granted("IS_AUTHENTICATED_FULLY") %}
-                            <a href="{{ path('app_profile_show') }}" title="{{ app.user.username }} - {{ 'label.profile'|trans }}">
-                                <i class="fas fa-user-circle user-signed-in"></i>
+                            <a href="{{ path('app_profile_show') }}" title="{{ app.user.displayName }} - {{ 'label.profile'|trans }}">
+                                {{ include('partials/avatar.html.twig', {size: 32}) }}
                             </a>
                         {% else %}
                             <a href="{{ path('app_login') }}" title="{{ 'label.login'|trans }}">

@@ -42,6 +42,7 @@ final class PostController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $post->setUser($this->getUser());
             /** @var UploadedFile $imageFile */
             if (null !== $imageFile = $form['image']['imageFile']->getData()) {
                 $filename = $fileUploader->upload($imageFile, $this->getParameter('kernel.project_dir').'/public/images/posts');

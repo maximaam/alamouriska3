@@ -62,7 +62,7 @@ post:
     create: Créer une publication
   form:
     label:
-      type: --- Type de publication --- *
+      type: --- Type de publication *
       title: La publication *
       description: Explication *
       question: Je pose une question

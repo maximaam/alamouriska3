@@ -15,8 +15,9 @@
     {% endfor %}
 
     <div class="container start-page">
-        <div class="row text-dark">
+        <div class="row">
             <div class="col-sm-8">
+                <h1 class="mb-3">Liste des Mots Algériens et derja (درجة)</h1>
                 {% for post in posts %}
                     {{ include('partials/card_post.html.twig', {post: post}, with_context = false) }}
                 {% endfor %}
