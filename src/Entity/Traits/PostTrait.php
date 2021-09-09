@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Traits;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 trait PostTrait
 {
     public static function getTypes(bool $keysOnly = true): array
@@ -16,5 +19,15 @@ trait PostTrait
         ];
 
         return $keysOnly ? array_keys($data) : $data;
+    }
+
+    /**
+     * @Assert\Callback()
+     */
+    public function validate(ExecutionContextInterface $executionContext): void
+    {
+        if (self::TYPE_WORD === $this->getType() && true === str_contains(trim($this->getTitle()), ' ')) {
+            $executionContext->addViolation('Please add the image for the feature option.');
+        }
     }
 }

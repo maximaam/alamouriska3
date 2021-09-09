@@ -2,8 +2,8 @@
 liip_imagine:
     # valid drivers options include "gd" or "gmagick" or "imagick"
     driver: "gd"
-    default_filter_set_settings:
-        format: webp
+    #default_filter_set_settings:
+        #format: webp
     filter_sets:
         cache : ~
         post_image:
@@ -12,15 +12,15 @@ liip_imagine:
                 relative_resize:
                     heighten: 400
 
-        avatar_image_128:
+        avatar_128:
             quality: 75
             filters:
                 thumbnail  : { size : [128, 128], mode : outbound }
-        avatar_image_64:
+        avatar_64:
             quality: 75
             filters:
                 thumbnail: { size: [64, 64], mode: outbound }
-        avatar_image_32:
+        avatar_32:
             quality: 75
             filters:
                 thumbnail: { size: [32, 32], mode: outbound }

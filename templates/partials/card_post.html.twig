@@ -4,7 +4,7 @@
             Type {{ post.type }}
         </div>
         <div class="d-flex">
-            {{ include('partials/avatar.html.twig', {size: 64}) }}
+            {{ include('partials/avatar.html.twig', {size: 64, current_user: post.user}) }}
             <div class="ps-2">
                 <h4><a href="">{{ post.user.displayName }}</a></h4>
                 <time class="text-secondary fs-6">{{ post.createdAt|date }}</time>

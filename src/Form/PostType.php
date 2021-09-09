@@ -56,7 +56,7 @@ final class PostType extends AbstractType
                 'help_html' => true,
                 'attr' => [
                     'accept' => 'image/jpg, image/jpeg, image/png',
-                    'data-action' => 'change->post-create#imagePreview',
+                    'data-action' => 'change->share#imagePreview',
                 ],
             ])
             ->add('submit', SubmitType::class, [

@@ -8,33 +8,22 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Service\FileUploader;
 use Exception;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager as ImagineCacheManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\{File\UploadedFile, Request, Response};
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Liip\ImagineBundle\Imagine\Cache\CacheManager as ImagineCacheManager;
 use Liip\ImagineBundle\Controller\ImagineController;
 use function getimagesize;
 
-#[Route(name: 'app_post_')]
+#[Route('/app/post', name: 'app_post_')]
 final class PostController extends AbstractController
 {
-    public const IMG_DIR = '/images/posts/';
-    public const IMG_CACHE_DIR = '/public/media/cache/post_image/images/posts/';
-
     public function __construct(
         private TranslatorInterface $translator,
     ){}
 
-    #[Route('/{type}', name: 'index', requirements: ['type'=>'%seo_route_post_type%'], methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('post/index.html.twig', [
-            'controller_name' => 'PostController',
-        ]);
-    }
-
-    #[Route('/app/post/new', name: 'create', methods: ['GET', 'POST'])]
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(Request $request, ImagineController $imagineController, FileUploader $fileUploader): Response
     {
         $post = new Post();
@@ -43,20 +32,18 @@ final class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setUser($this->getUser());
-            /** @var UploadedFile $imageFile */
-            if (null !== $imageFile = $form['image']['imageFile']->getData()) {
-                $filename = $fileUploader->upload($imageFile, $this->getParameter('kernel.project_dir').'/public/images/posts');
-                $post->getImage()?->setName($filename);
-            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($post);
 
-            if (null !== $post->getImage()) {
-                $imagineController->filterAction($request, self::IMG_DIR.$post->getImage()?->getName(), 'post_image');
-                $cachedImageSize = getimagesize($this->getParameter('kernel.project_dir').self::IMG_CACHE_DIR.$post->getImage()?->getName());
+            /** @var UploadedFile $imageFile */
+            if (null !== $imageFile = $form['image']['imageFile']->getData()) {
+                $filename = $fileUploader->upload($imageFile, $this->getImageDirectoryPath());
+                $response = $imagineController->filterAction($request, Post::IMAGE_PATH.$filename, 'post_image');
+                $cachedImageSize = getimagesize($this->getCachedImagePath($response->getTargetUrl()));
                 $post->getImage()
-                    ?->setWidth($cachedImageSize[0])
+                    ?->setName($filename)
+                    ->setWidth($cachedImageSize[0])
                     ->setHeight($cachedImageSize[1])
                     ->setMime($cachedImageSize['mime']);
             }
@@ -72,23 +59,14 @@ final class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/app/post/delete/{id}', name: 'delete', methods: ['GET'])]
-    public function delete(Post $post, ImagineCacheManager $imagineCacheManager, ): Response
+    #[Route('/delete/{id}', name: 'delete', methods: ['GET'])]
+    public function delete(Post $post, ImagineCacheManager $cacheManager): Response
     {
-        //$cachePath = $imagineCacheManager->getBrowserPath(self::IMG_DIR, 'post_image');
-
-
-        //$dir = $this->getParameter('kernel.project_dir').'/media/cache/post_image/images/posts';
-        //dd(file_exists($this->getCacheImagePath($post->getImage()?->getName())));
-        //$imagineCacheManager->remove(null, 'post_image');
-
-
         try {
-            $imagePath = $this->getCacheImagePath($post->getImage()?->getName());
+            $cacheManager->remove(Post::IMAGE_PATH.$post->getImage()?->getName());
             $this->getDoctrine()->getManager()->remove($post);
             $this->getDoctrine()->getManager()->flush();
-            unlink($imagePath);
-            unlink($this->getParameter('kernel.project_dir').'/public/images/posts/'.$post->getImage()?->getName());
+            unlink($this->getImageDirectoryPath().$post->getImage()?->getName());
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -96,10 +74,15 @@ final class PostController extends AbstractController
         return $this->redirectToRoute('app_index_index');
     }
 
-    private function getCacheImagePath(?string $filename): string
+    private function getCachedImagePath(?string $url): string
     {
-        return $this->getParameter('kernel.project_dir').self::IMG_CACHE_DIR.$filename;
+        return $this->getParameter('kernel.project_dir').'/public'.parse_url($url, PHP_URL_PATH);
 
+    }
+
+    private function getImageDirectoryPath(): string
+    {
+        return $this->getParameter('kernel.project_dir').'/public'.Post::IMAGE_PATH;
     }
 
 }

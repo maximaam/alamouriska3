@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\FileUploader;
 use Liip\ImagineBundle\Controller\ImagineController;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use LogicException;
 use App\Form\EditUserFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,9 +21,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route(name: 'app_')]
 final class SecurityController extends AbstractController
 {
-    public const IMG_DIR = '/images/avatars/';
-    public const IMG_CACHE_DIR = '/public/media/cache/avatar_image/images/avatars/';
-
     #[Route('/login', name: 'login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -51,7 +49,7 @@ final class SecurityController extends AbstractController
     }
 
     #[Route('/profile/edit', name: 'profile_edit')]
-    public function profileEdit(Request $request, TranslatorInterface $translator, ImagineController $imagineController, FileUploader $fileUploader): Response
+    public function profileEdit(Request $request, TranslatorInterface $translator, FileUploader $fileUploader, CacheManager $cacheManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -63,18 +61,14 @@ final class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imageFile */
             if (null !== $imageFile = $form['avatar']['imageFile']->getData()) {
-                $filename = $fileUploader->upload($imageFile, $this->getParameter('kernel.project_dir').'/public/images/avatars', $user->getDisplayName());
-
-                $imagineController->filterAction($request, self::IMG_DIR.$filename, 'avatar_image_128');
-                $imagineController->filterAction($request, self::IMG_DIR.$filename, 'avatar_image_64');
-                $imagineController->filterAction($request, self::IMG_DIR.$filename, 'avatar_image_32');
+                $filename = $fileUploader->upload($imageFile, $this->getAvatarDirectoryPath(), $user->getDisplayName());
+                $cacheManager->remove(User::AVATAR_PATH.$filename); //when update remove cache
                 $user->getAvatar()
                     ?->setName($filename)
                     ->setWidth(128)
                     ->setHeight(128)
                     ->setMime('image/webp');
             }
-
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', $translator->trans('flash.profile_edit_success'));
 
@@ -84,5 +78,10 @@ final class SecurityController extends AbstractController
         return $this->render('security/profile_edit.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function getAvatarDirectoryPath(): string
+    {
+        return $this->getParameter('kernel.project_dir').'/public'.User::AVATAR_PATH;
     }
 }

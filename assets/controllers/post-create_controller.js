@@ -8,16 +8,6 @@ export default class extends Controller {
         this.$isQuestion = document.querySelector('#post_isQuestion');
     }
 
-    imagePreview() {
-        const $file = this.element.getElementsByClassName('input-image')[0],
-            reader = new FileReader();
-
-        reader.readAsDataURL($file.files[0]);
-        reader.onload = (e)=> {
-            document.querySelector('.image-preview').src = e.target.result;
-        };
-    }
-
     typeChange(event) {
         const $titleLabel = this.$title.previousSibling;
         const currentType = 0 !== +this.$type.selectedIndex

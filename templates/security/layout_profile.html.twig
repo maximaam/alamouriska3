@@ -15,7 +15,7 @@
     {% endfor %}
 
     <div class="mb-2 text-center">
-        {{ include('partials/avatar.html.twig') }}
+        {{ include('partials/avatar.html.twig', {size: 128}) }}
     </div>
 
     {% block profile_content %}

@@ -12,10 +12,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use function sprintf, strpos, strstr, ucfirst, strtoupper;
 
-/**
- * Class NavBuilder
- * @package App\Service
- */
 final class NavBuilder
 {
     public function __construct(
@@ -31,7 +27,7 @@ final class NavBuilder
         $menu->setChildrenAttribute('class', 'navbar-nav me-auto mb-2 mb-lg-0');
         foreach (Post::getTypes(false) as $typeId => $typeName) {
             $menu->addChild(strtoupper($this->translator->trans(sprintf('post.%s.plural', $typeName))), [
-                'route' => 'app_post_index',
+                'route' => 'app_index_index',
                 'routeParameters' => [
                     'type' => $this->translator->trans(sprintf('post.%s.seo_route', $typeName))
                 ],

@@ -27,6 +27,9 @@ class Post
     public const TYPE_PROVERB = 3;
     public const TYPE_JOKE = 4;
 
+    public const IMAGE_PATH = '/uploads/posts/';
+    public const IMG_CACHE_DIR = '/public/media/cache/post_image/uploads/posts/';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
