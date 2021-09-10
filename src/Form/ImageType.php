@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -21,6 +22,11 @@ final class ImageType extends AbstractType
                 'required' => false,
                 'attr' => [
                   'class' => 'input-image',
+                ],
+                'constraints' => [
+                    new ImageConstraint([
+                        'maxSize' => '2M',
+                    ])
                 ],
             ]);
     }

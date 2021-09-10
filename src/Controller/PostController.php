@@ -16,14 +16,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Liip\ImagineBundle\Controller\ImagineController;
 use function getimagesize;
 
-#[Route('/app/post', name: 'app_post_')]
+#[Route(name: 'app_post_')]
 final class PostController extends AbstractController
 {
     public function __construct(
         private TranslatorInterface $translator,
     ){}
 
-    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[Route('/app/post/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(Request $request, ImagineController $imagineController, FileUploader $fileUploader): Response
     {
         $post = new Post();
@@ -59,7 +59,15 @@ final class PostController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'delete', methods: ['GET'])]
+    #[Route('/{type}', name: 'show', requirements: ['type'=>'%seo_route_post_type%'], methods: ['GET'])]
+    public function show(): Response
+    {
+        return $this->render('post/index.html.twig', [
+            'controller_name' => 'PostController',
+        ]);
+    }
+
+    #[Route('/app/post/delete/{id}', name: 'delete', methods: ['GET'])]
     public function delete(Post $post, ImagineCacheManager $cacheManager): Response
     {
         try {

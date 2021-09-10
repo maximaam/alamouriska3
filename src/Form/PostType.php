@@ -35,6 +35,15 @@ final class PostType extends AbstractType
             ])
             ->add('title', null, [
                 'label' => 'post.form.label.title',
+                'help_html' => true,
+                'help' => (static function () {
+                    $links = '<i class="fa fa-link fs-6"></i> <a href="https://www.lexilogos.com/clavier/tamazight_latin.htm" target="_blank">Clavier Tamaziɣt Latin</a>';
+                    $links .= ' | ';
+                    $links .= '<a href="https://www.lexilogos.com/clavier/tamazight.htm" target="_blank">Clavier Tamaziɣt ⵜⴰⵎⴰⵣⵉⵖⵜ</a>';
+                    $links .= ' | ';
+                    $links .= '<a href="https://www.lexilogos.com/clavier/araby.htm" target="_blank">Clavier Arabe</a>';
+                    return $links;
+                })(),
                 'attr' => [
                     'rows' => 3,
                     'class' => 'post-title',
