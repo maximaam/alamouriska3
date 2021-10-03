@@ -66,4 +66,5 @@ post:
       title: La publication *
       description: Explication *
       question: Je cherche l'explication
-      image: Image (optionnel)
+      image:
+        help: Image est optionnelle

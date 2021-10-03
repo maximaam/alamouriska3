@@ -21,6 +21,11 @@ trait PostTrait
         return $keysOnly ? array_keys($data) : $data;
     }
 
+    public function getUploadStoragePath(): string
+    {
+        return self::IMAGE_PATH;
+    }
+
     /**
      * @Assert\Callback()
      */

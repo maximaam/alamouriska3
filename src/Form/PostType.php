@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\Post;
+use App\EventSubscriber\FormPostSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -14,6 +15,8 @@ use function array_walk, sprintf, array_flip, str_replace;
 
 final class PostType extends AbstractType
 {
+    public function __construct(private FormPostSubscriber $formPostSubscriber) {}
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $types = Post::getTypes(false);
@@ -57,23 +60,21 @@ final class PostType extends AbstractType
             ])
             ->add('isQuestion', null, [
                 'label' => 'post.form.label.question',
-            ])
-            ->add('image', ImageType::class, [
-                'label' => 'post.form.label.image',
-                'required' => false,
-                'help' => '<img src="#" alt="" class="image-preview">',
-                'help_html' => true,
-                'attr' => [
-                    'accept' => 'image/jpg, image/jpeg, image/png',
-                    'data-action' => 'change->share#imagePreview',
-                ],
-            ])
-            ->add('submit', SubmitType::class, [
+            ]);
+
+            foreach (Post::$images as $image) {
+                $builder->add($image, ImageType::class, [
+                    'required' => false,
+                ]);
+            }
+
+            $builder->add('submit', SubmitType::class, [
                 'label' => 'label.send',
                 'row_attr' => [
                     'class' => 'text-end',
                 ],
-            ]);
+            ])
+            ->addEventSubscriber($this->formPostSubscriber);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

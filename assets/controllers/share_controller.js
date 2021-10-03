@@ -1,13 +1,21 @@
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
-    imagePreview() {
-        const $file = this.element.getElementsByClassName('input-image')[0],
-            reader = new FileReader();
+    imagePreview(clickedElementEvent) {
+        const $file = clickedElementEvent.currentTarget,
+            Reader = new FileReader();
 
-        reader.readAsDataURL($file.files[0]);
-        reader.onload = (e)=> {
-            document.querySelector('.image-preview').src = e.target.result;
+        Reader.readAsDataURL($file.files[0]);
+        Reader.onload = (parsedElementEvent)=> {
+            const $parent = $file.parentNode,
+                id = $file.getAttribute('id'),
+                $imagePreview = document.querySelector('#preview-'+id);
+
+            if (null !== $imagePreview) {
+                $imagePreview.remove();
+            }
+
+            $parent.insertAdjacentHTML('afterend', '<img id="preview-' + id + '" src="' + parsedElementEvent.currentTarget.result + '" class="image-preview" alt="Preview">');
         };
     }
 

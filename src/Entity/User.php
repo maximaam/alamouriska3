@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,6 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields={"displayName"}, message="display_name_exists")
  * @UniqueEntity(fields={"email"}, message="email_exists")
  * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"App\EventListener\EntityLifecycleListener"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -95,7 +95,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private Collection $posts;
 
-    #[Pure]
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -294,5 +293,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getFileStorageDir(): string
+    {
+        return self::AVATAR_PATH;
     }
 }

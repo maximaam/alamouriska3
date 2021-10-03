@@ -24,6 +24,15 @@
                      height="{{ post.image.height }}">
             </div>
         {% endif %}
+        {% if post.image2 %}
+            <div class="post-image">
+                <img src="{{ asset(post.image2.name, 'post_image')|imagine_filter('post_image') }}"
+                     alt="{{ post.title }}"
+                     title="{{ post.title }}"
+                     width="{{ post.image2.width }}"
+                     height="{{ post.image2.height }}">
+            </div>
+        {% endif %}
         <div class="post-description"></div>
         <div class="post-actions"></div>
     </div>

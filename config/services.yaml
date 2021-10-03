@@ -14,7 +14,7 @@ parameters:
     mailer_from: 'app@alamouriska.com'
     seo_route_post_type: 'mots-algeriens|expressions-algeriennes|proverbes-algeriens|blagues-algeriennes|blogs-langue-algerienne'
     full_domain: 'https://www.alamouriska.com'
-
+    public_dir: '%kernel.project_dir%/public'
 
 services:
     # default configuration for services in *this* file
@@ -46,3 +46,7 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: mainMenu, alias: main }
             - { name: knp_menu.menu_builder, method: footerMenu, alias: footer }
+
+    #App\EventListener\EntityLifecycleListener:
+        #tags:
+            #- { name: 'doctrine.orm.entity_listener' }

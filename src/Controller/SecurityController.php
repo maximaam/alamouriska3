@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\FileUploader;
+use DateTime;
 use Liip\ImagineBundle\Controller\ImagineController;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use LogicException;
@@ -59,7 +60,9 @@ final class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $user->setUpdatedAt(new DateTime());
             /** @var UploadedFile $imageFile */
+            /*
             if (null !== $imageFile = $form['avatar']['imageFile']->getData()) {
                 $filename = $fileUploader->upload($imageFile, $this->getAvatarDirectoryPath(), $user->getDisplayName());
                 $cacheManager->remove(User::AVATAR_PATH.$filename); //when update remove cache
@@ -69,6 +72,7 @@ final class SecurityController extends AbstractController
                     ->setHeight(128)
                     ->setMime('image/webp');
             }
+            */
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', $translator->trans('flash.profile_edit_success'));
 

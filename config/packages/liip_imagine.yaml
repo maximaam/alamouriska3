@@ -9,8 +9,11 @@ liip_imagine:
         post_image:
             quality: 75
             filters:
-                relative_resize:
-                    heighten: 400
+                #relative_resize:
+                    #heighten: 400
+                fixed:
+                    width: 512
+                    height: 384
 
         avatar_128:
             quality: 75

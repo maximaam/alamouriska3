@@ -21,12 +21,15 @@ final class ImageType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'attr' => [
-                  'class' => 'input-image',
+                    'class' => 'input-image',
+                    'accept' => 'image/jpg, image/jpeg, image/png',
+                    'data-action' => 'change->share#imagePreview',
                 ],
+                'help' => 'post.form.label.image.help',
                 'constraints' => [
                     new ImageConstraint([
                         'maxSize' => '2M',
-                    ])
+                    ]),
                 ],
             ]);
     }
