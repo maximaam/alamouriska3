@@ -6,9 +6,11 @@ namespace App\Entity;
 
 use App\Entity\Traits\ImageUploadTrait;
 use App\Entity\Traits\PostTrait;
+use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PostRepository;
 
@@ -16,7 +18,8 @@ use App\Repository\PostRepository;
  * @ORM\Entity(repositoryClass=PostRepository::class)
  * @UniqueEntity(fields={"title"}, message="post_exists")
  * @ORM\HasLifecycleCallbacks()
- * @ORM\EntityListeners({"App\EventListener\EntityLifecycleListener"})
+ * @IgnoreAnnotation("liipFilter")
+ * ORM\EntityListeners({"App\EventListener\EntityLifecycleListener"})
  */
 class Post
 {
@@ -29,9 +32,6 @@ class Post
     public const TYPE_PROVERB = 3;
     public const TYPE_JOKE = 4;
     public const IMAGE_PATH = '/uploads/posts/';
-    public const IMG_CACHE_DIR = '/public/media/cache/post_image/uploads/posts/';
-
-    public static array $images = ['image', 'image2'];
 
     /**
      * @ORM\Id
@@ -65,11 +65,13 @@ class Post
 
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
+     * @liipFilter(post_image)
      */
     private ?Image $image = null;
 
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
+     * @liipFilter(post_image)
      */
     private ?Image $image2 = null;
 
@@ -77,7 +79,7 @@ class Post
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private ?User $user;
+    private ?UserInterface $user;
 
     public function getId(): ?int
     {
@@ -156,12 +158,12 @@ class Post
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 

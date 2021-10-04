@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Entity\Post;
+use App\Entity\User;
 use App\Service\FileUploader;
 use JetBrains\PhpStorm\ArrayShape;
 use Liip\ImagineBundle\Controller\ImagineController;
@@ -13,6 +15,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use function sprintf, ucfirst, getimagesize;
 
 class FormPostSubscriber implements EventSubscriberInterface
 {
@@ -36,32 +39,31 @@ class FormPostSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $entity = $event->getData();
 
-        if ($entity->hasImages()) {
-            $this->uploadImages($form, $entity);
-        }
-
+        $this->uploadImages($form, $entity);
         //do other stuff
     }
 
-    private function uploadImages(FormInterface $form, mixed $entity): void
+    private function uploadImages(FormInterface $form, Post|User $entity): void
     {
-        foreach ($entity::$images as $image) {
-            if (null === $uploadedImage = $form[$image]['imageFile']->getData()) {
+        if (null === $imagesProperties = $entity->getImagesProperties()) {
+            return;
+        }
+
+        $globalStoragePath = $entity->hasGlobalStoragePath()
+            ? $entity->getUploadStoragePath()
+            : null;
+
+        foreach ($imagesProperties as $imageProperty) {
+            if (null === $uploadedImage = $form[$imageProperty['name']]['imageFile']->getData()) {
                 continue;
             }
 
-            $imageGetter = sprintf('get%s', ucfirst($image));
-            $imageGetterStorage = sprintf('get%sStoragePath', ucfirst($image));
-            $storagePath = $entity->hasGlobalStoragePath()
-                ? $entity->getUploadStoragePath()
-                : $entity->$imageGetterStorage();
-
+            $imageGetter = sprintf('get%s', ucfirst($imageProperty['name']));
+            $storagePath = $globalStoragePath ?? sprintf('get%sStoragePath', ucfirst($imageProperty['name']));
             $filename = $this->fileUploader->upload($uploadedImage, $this->parameterBag->get('public_dir').$storagePath);
-            $filterResponse = $this->imagineController->filterAction($this->requestStack->getCurrentRequest(), $storagePath.$filename, 'post_image');
-
+            $filterResponse = $this->imagineController->filterAction($this->requestStack->getCurrentRequest(), $storagePath.$filename, $imageProperty['liip_filter']);
             $cachedImagePath = $this->parameterBag->get('public_dir').parse_url($filterResponse->getTargetUrl(), PHP_URL_PATH);
             $cachedImageSize = getimagesize($cachedImagePath);
-
             $entity->$imageGetter()
                 ?->setName($filename)
                 ->setWidth($cachedImageSize[0])

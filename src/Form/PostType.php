@@ -6,6 +6,7 @@ namespace App\Form;
 
 use App\Entity\Post;
 use App\EventSubscriber\FormPostSubscriber;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,10 +16,14 @@ use function array_walk, sprintf, array_flip, str_replace;
 
 final class PostType extends AbstractType
 {
-    public function __construct(private FormPostSubscriber $formPostSubscriber) {}
+    public function __construct(
+        private FormPostSubscriber $formPostSubscriber,
+    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var Post $post */
+        $post = $options['data'];
         $types = Post::getTypes(false);
         array_walk($types, static function (string &$val) {
             $val = sprintf('post.%s.singular', $val);
@@ -62,10 +67,12 @@ final class PostType extends AbstractType
                 'label' => 'post.form.label.question',
             ]);
 
-            foreach (Post::$images as $image) {
-                $builder->add($image, ImageType::class, [
-                    'required' => false,
-                ]);
+            if (null !== $imagesProperties = $post->getImagesProperties()) {
+                foreach ($imagesProperties as $imageProperty) {
+                    $builder->add($imageProperty['name'], ImageType::class, [
+                        'required' => false,
+                    ]);
+                }
             }
 
             $builder->add('submit', SubmitType::class, [

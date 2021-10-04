@@ -15,6 +15,7 @@ final class FileUploader
         if (null === $filename) {
             $filename = md5($file->getClientOriginalName().microtime());
         }
+
         $filename .= '.'.$file->guessExtension();
 
         if (false === is_dir($destinationPath)) {
