@@ -28,7 +28,7 @@ final class UploadedFileRemover
             : null;
 
         foreach ($imagesProperties as $imagesProperty) {
-            $imageGetter = sprintf('get%s', ucfirst($imagesProperty['name']));
+            $imageGetter = sprintf('get%s', ucfirst($imagesProperty));
             if (null === $entity->$imageGetter()) {
                 continue;
             }

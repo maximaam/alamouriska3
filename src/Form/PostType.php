@@ -6,7 +6,6 @@ namespace App\Form;
 
 use App\Entity\Post;
 use App\EventSubscriber\FormPostSubscriber;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -65,23 +64,18 @@ final class PostType extends AbstractType
             ])
             ->add('isQuestion', null, [
                 'label' => 'post.form.label.question',
-            ]);
-
-            if (null !== $imagesProperties = $post->getImagesProperties()) {
-                foreach ($imagesProperties as $imageProperty) {
-                    $builder->add($imageProperty['name'], ImageType::class, [
-                        'required' => false,
-                    ]);
-                }
-            }
-
-            $builder->add('submit', SubmitType::class, [
+            ])
+            ->add('image', ImageType::class, [
+                'required' => false,
+            ])
+            ->add('submit', SubmitType::class, [
                 'label' => 'label.send',
                 'row_attr' => [
                     'class' => 'text-end',
                 ],
             ])
-            ->addEventSubscriber($this->formPostSubscriber);
+            ->addEventSubscriber($this->formPostSubscriber)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

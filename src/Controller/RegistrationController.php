@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use function sprintf;
@@ -28,7 +28,7 @@ final class RegistrationController extends AbstractController
     ){}
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_index_index');
@@ -39,7 +39,7 @@ final class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData());
+            $password = $passwordHasher->hashPassword($user, $form->get('plainPassword')->getData());
             $user->setPassword($password);
 
             $entityManager = $this->getDoctrine()->getManager();

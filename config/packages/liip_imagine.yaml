@@ -4,9 +4,17 @@ liip_imagine:
     driver: "gd"
     #default_filter_set_settings:
         #format: webp
+
+    resolvers:
+        uploads:
+            web_path:
+                #web_root: ~
+                cache_prefix: "images/uploads/cache"
+
     filter_sets:
         cache : ~
         post_image:
+            cache: uploads
             quality: 75
             filters:
                 #relative_resize:

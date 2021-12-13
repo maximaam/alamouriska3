@@ -8,21 +8,18 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Service\FileUploader;
 use JetBrains\PhpStorm\ArrayShape;
-use Liip\ImagineBundle\Controller\ImagineController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use function sprintf, ucfirst, getimagesize;
 
-class FormPostSubscriber implements EventSubscriberInterface
+final class FormPostSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private FileUploader $fileUploader,
-        private ImagineController $imagineController,
-        private RequestStack $requestStack,
         private ParameterBagInterface $parameterBag,
     ) {}
 
@@ -54,21 +51,26 @@ class FormPostSubscriber implements EventSubscriberInterface
             : null;
 
         foreach ($imagesProperties as $imageProperty) {
-            if (null === $uploadedImage = $form[$imageProperty['name']]['imageFile']->getData()) {
+            /** @var UploadedFile $uploadedImage */
+            if (null === $uploadedImage = $form[$imageProperty]['imageFile']->getData()) {
                 continue;
             }
 
-            $imageGetter = sprintf('get%s', ucfirst($imageProperty['name']));
-            $storagePath = $globalStoragePath ?? sprintf('get%sStoragePath', ucfirst($imageProperty['name']));
+            $imageSize = getimagesize($uploadedImage->getRealPath());
+            $imageGetter = sprintf('get%s', ucfirst($imageProperty));
+            $storagePath = $globalStoragePath ?? sprintf('get%sStoragePath', ucfirst($imageProperty));
             $filename = $this->fileUploader->upload($uploadedImage, $this->parameterBag->get('public_dir').$storagePath);
+            $entity->$imageGetter()
+                ?->setName($filename)
+                ->setWidth($imageSize[0])
+                ->setHeight($imageSize[1])
+                ->setMime($imageSize['mime']);
+
+            /** generate images in the cache...
             $filterResponse = $this->imagineController->filterAction($this->requestStack->getCurrentRequest(), $storagePath.$filename, $imageProperty['liip_filter']);
             $cachedImagePath = $this->parameterBag->get('public_dir').parse_url($filterResponse->getTargetUrl(), PHP_URL_PATH);
             $cachedImageSize = getimagesize($cachedImagePath);
-            $entity->$imageGetter()
-                ?->setName($filename)
-                ->setWidth($cachedImageSize[0])
-                ->setHeight($cachedImageSize[1])
-                ->setMime($cachedImageSize['mime']);
+             * */
         }
     }
 }

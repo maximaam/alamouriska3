@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Entity\Traits\ImageUploadTrait;
 use App\Entity\Traits\PostTrait;
-use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -18,8 +17,6 @@ use App\Repository\PostRepository;
  * @ORM\Entity(repositoryClass=PostRepository::class)
  * @UniqueEntity(fields={"title"}, message="post_exists")
  * @ORM\HasLifecycleCallbacks()
- * @IgnoreAnnotation("liipFilter")
- * ORM\EntityListeners({"App\EventListener\EntityLifecycleListener"})
  */
 class Post
 {
@@ -65,15 +62,8 @@ class Post
 
     /**
      * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     * @liipFilter(post_image)
      */
     private ?Image $image = null;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist", "remove"})
-     * @liipFilter(post_image)
-     */
-    private ?Image $image2 = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
@@ -142,18 +132,6 @@ class Post
     public function setImage(?Image $image): self
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getImage2(): ?Image
-    {
-        return $this->image2;
-    }
-
-    public function setImage2(?Image $image2): self
-    {
-        $this->image2 = $image2;
 
         return $this;
     }

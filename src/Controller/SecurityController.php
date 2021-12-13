@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\FileUploader;
 use DateTime;
-use Liip\ImagineBundle\Controller\ImagineController;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use LogicException;
 use App\Form\EditUserFormType;
